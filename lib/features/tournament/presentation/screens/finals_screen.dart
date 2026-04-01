@@ -75,11 +75,14 @@ class _FinalsContent extends ConsumerWidget {
     final firstPlaceMatch = finals.isNotEmpty ? finals[0] : null;
     final thirdPlaceMatch = finals.length > 1 ? finals[1] : null;
 
+    final allFinalsCompleted = tournament.finalMatches.length >= 2 &&
+        tournament.finalMatches.every((m) => m.isCompleted);
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        if (tournament.status == TournamentStatus.completed)
-          _buildChampionBanner(context, tournament),
+        if (allFinalsCompleted)
+          _buildPodium(context, tournament),
         if (firstPlaceMatch != null)
           _FinalMatchCard(
             title: l10n.firstPlaceMatch,
@@ -101,36 +104,54 @@ class _FinalsContent extends ConsumerWidget {
     );
   }
 
-  Widget _buildChampionBanner(BuildContext context, Tournament tournament) {
+  Widget _buildPodium(BuildContext context, Tournament tournament) {
     final l10n = AppLocalizations.of(context)!;
-    final finalMatch = tournament.finalMatches[0];
-    final winnerId = finalMatch.team1Sets > finalMatch.team2Sets
-        ? finalMatch.team1Id
-        : finalMatch.team2Id;
-    final winner = tournament.teams.firstWhere((t) => t.id == winnerId);
+    final firstPlaceMatch = tournament.finalMatches[0];
+    final thirdPlaceMatch = tournament.finalMatches[1];
 
-    return Card(
-      color: Theme.of(context).colorScheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            const Icon(Icons.emoji_events, size: 48, color: Colors.amber),
-            const SizedBox(height: 8),
-            Text(
-              l10n.champion,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            Text(
-              winner.name,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-            ),
-          ],
+    final championId = firstPlaceMatch.team1Sets > firstPlaceMatch.team2Sets
+        ? firstPlaceMatch.team1Id
+        : firstPlaceMatch.team2Id;
+    final runnerUpId = firstPlaceMatch.team1Sets > firstPlaceMatch.team2Sets
+        ? firstPlaceMatch.team2Id
+        : firstPlaceMatch.team1Id;
+    final thirdId = thirdPlaceMatch.team1Sets > thirdPlaceMatch.team2Sets
+        ? thirdPlaceMatch.team1Id
+        : thirdPlaceMatch.team2Id;
+
+    final champion = tournament.teams.firstWhere((t) => t.id == championId);
+    final runnerUp = tournament.teams.firstWhere((t) => t.id == runnerUpId);
+    final third = tournament.teams.firstWhere((t) => t.id == thirdId);
+
+    return Column(
+      children: [
+        _PodiumCard(
+          title: l10n.champion,
+          teamName: champion.name,
+          icon: Icons.emoji_events,
+          iconColor: Colors.amber,
+          cardColor: Theme.of(context).colorScheme.primaryContainer,
+          textColor: Theme.of(context).colorScheme.onPrimaryContainer,
         ),
-      ),
+        const SizedBox(height: 12),
+        _PodiumCard(
+          title: l10n.secondPlace,
+          teamName: runnerUp.name,
+          icon: Icons.emoji_events,
+          iconColor: Colors.grey.shade400,
+          cardColor: Theme.of(context).colorScheme.secondaryContainer,
+          textColor: Theme.of(context).colorScheme.onSecondaryContainer,
+        ),
+        const SizedBox(height: 12),
+        _PodiumCard(
+          title: l10n.thirdPlace,
+          teamName: third.name,
+          icon: Icons.emoji_events,
+          iconColor: Colors.brown.shade300,
+          cardColor: Theme.of(context).colorScheme.tertiaryContainer,
+          textColor: Theme.of(context).colorScheme.onTertiaryContainer,
+        ),
+      ],
     );
   }
 }
@@ -159,15 +180,15 @@ class _FinalMatchCard extends ConsumerWidget {
 
     return Card(
       child: InkWell(
-        onTap: match.isCompleted
-            ? null
-            : () async {
+        onTap: () async {
                 final result =
                     await showDialog<({int team1Sets, int team2Sets})>(
                   context: context,
                   builder: (_) => MatchScoreDialog(
                     team1Name: team1.name,
                     team2Name: team2.name,
+                    initialTeam1Sets: match.team1Sets,
+                    initialTeam2Sets: match.team2Sets,
                   ),
                 );
                 if (result != null) {
@@ -253,6 +274,60 @@ class _FinalMatchCard extends ConsumerWidget {
               ],
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PodiumCard extends StatelessWidget {
+  final String title;
+  final String teamName;
+  final IconData icon;
+  final Color iconColor;
+  final Color cardColor;
+  final Color textColor;
+
+  const _PodiumCard({
+    required this.title,
+    required this.teamName,
+    required this.icon,
+    required this.iconColor,
+    required this.cardColor,
+    required this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: cardColor,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            Icon(icon, size: 40, color: iconColor),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: textColor,
+                        ),
+                  ),
+                  Text(
+                    teamName,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

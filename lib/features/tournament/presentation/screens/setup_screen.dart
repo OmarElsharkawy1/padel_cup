@@ -16,7 +16,7 @@ class SetupScreen extends ConsumerStatefulWidget {
 class _SetupScreenState extends ConsumerState<SetupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _timerController = TextEditingController(text: '10');
+  final _timerController = TextEditingController(text: '20');
   final _groupAControllers =
       List.generate(AppConstants.teamsPerGroup, (_) => TextEditingController());
   final _groupBControllers =

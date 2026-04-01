@@ -110,6 +110,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get champion => 'البطل';
 
   @override
+  String get secondPlace => 'المركز الثاني';
+
+  @override
   String get thirdPlace => 'المركز الثالث';
 
   @override
