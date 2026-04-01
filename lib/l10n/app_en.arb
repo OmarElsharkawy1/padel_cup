@@ -1,0 +1,82 @@
+{
+  "@@locale": "en",
+  "appTitle": "Padel Cup",
+  "setup": "Setup",
+  "tournamentName": "Tournament Name",
+  "teamName": "Team Name",
+  "groupA": "Group A",
+  "groupB": "Group B",
+  "team": "Team",
+  "teamNumber": "Team {number}",
+  "@teamNumber": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "matchTimer": "Match Timer (minutes)",
+  "firstToSets": "Or first to {count} sets",
+  "@firstToSets": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "startTournament": "Start Tournament",
+  "scoreboard": "Scoreboard",
+  "standings": "Standings",
+  "finals": "Finals",
+  "settings": "Settings",
+  "round": "Round {number}",
+  "@round": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "court": "Court {number}",
+  "@court": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "resting": "Resting",
+  "vs": "VS",
+  "played": "P",
+  "wins": "W",
+  "ties": "T",
+  "losses": "L",
+  "points": "Pts",
+  "setDifference": "SD",
+  "setsWon": "SW",
+  "setsLost": "SL",
+  "rank": "#",
+  "firstPlaceMatch": "1st Place Match",
+  "thirdPlaceMatch": "3rd Place Match",
+  "champion": "Champion",
+  "thirdPlace": "3rd Place",
+  "finalsNotReady": "Complete all group matches to unlock finals",
+  "enterScore": "Enter Score",
+  "save": "Save",
+  "cancel": "Cancel",
+  "theme": "Theme",
+  "lightMode": "Light",
+  "darkMode": "Dark",
+  "systemMode": "System",
+  "language": "Language",
+  "english": "English",
+  "arabic": "Arabic",
+  "resetTournament": "Reset Tournament",
+  "resetConfirmation": "Are you sure? This will delete all tournament data.",
+  "reset": "Reset",
+  "noTournament": "No tournament yet. Set one up!",
+  "groupStage": "Group Stage",
+  "completed": "Completed",
+  "matchCompleted": "Match completed",
+  "enterTeamNames": "Please enter all team names",
+  "enterTournamentName": "Please enter tournament name",
+  "winner": "Winner",
+  "setsFor": "Sets for {team}",
+  "@setsFor": {
+    "placeholders": {
+      "team": { "type": "String" }
+    }
+  }
+}
