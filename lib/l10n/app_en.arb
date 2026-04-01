@@ -51,6 +51,7 @@
   "firstPlaceMatch": "1st Place Match",
   "thirdPlaceMatch": "3rd Place Match",
   "champion": "Champion",
+  "secondPlace": "2nd Place",
   "thirdPlace": "3rd Place",
   "finalsNotReady": "Complete all group matches to unlock finals",
   "enterScore": "Enter Score",

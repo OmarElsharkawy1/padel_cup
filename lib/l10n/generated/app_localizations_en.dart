@@ -110,6 +110,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get champion => 'Champion';
 
   @override
+  String get secondPlace => '2nd Place';
+
+  @override
   String get thirdPlace => '3rd Place';
 
   @override

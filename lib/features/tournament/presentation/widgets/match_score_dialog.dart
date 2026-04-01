@@ -4,11 +4,15 @@ import 'package:padel_cup/l10n/generated/app_localizations.dart';
 class MatchScoreDialog extends StatefulWidget {
   final String team1Name;
   final String team2Name;
+  final int initialTeam1Sets;
+  final int initialTeam2Sets;
 
   const MatchScoreDialog({
     super.key,
     required this.team1Name,
     required this.team2Name,
+    this.initialTeam1Sets = 0,
+    this.initialTeam2Sets = 0,
   });
 
   @override
@@ -16,8 +20,8 @@ class MatchScoreDialog extends StatefulWidget {
 }
 
 class _MatchScoreDialogState extends State<MatchScoreDialog> {
-  int _team1Sets = 0;
-  int _team2Sets = 0;
+  late int _team1Sets = widget.initialTeam1Sets;
+  late int _team2Sets = widget.initialTeam2Sets;
 
   @override
   Widget build(BuildContext context) {

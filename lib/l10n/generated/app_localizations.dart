@@ -284,6 +284,12 @@ abstract class AppLocalizations {
   /// **'Champion'**
   String get champion;
 
+  /// No description provided for @secondPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'2nd Place'**
+  String get secondPlace;
+
   /// No description provided for @thirdPlace.
   ///
   /// In en, this message translates to:

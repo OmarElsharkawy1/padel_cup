@@ -157,9 +157,7 @@ class _ScoreboardContent extends ConsumerWidget {
           _MatchTile(
             match: match,
             tournament: tournament,
-            onTap: match.isCompleted
-                ? null
-                : () => _showScoreDialog(context, ref, match, tournament),
+            onTap: () => _showScoreDialog(context, ref, match, tournament),
           ),
         if (restingTeam != null)
           Padding(
@@ -196,6 +194,8 @@ class _ScoreboardContent extends ConsumerWidget {
       builder: (_) => MatchScoreDialog(
         team1Name: team1.name,
         team2Name: team2.name,
+        initialTeam1Sets: match.team1Sets,
+        initialTeam2Sets: match.team2Sets,
       ),
     );
 
@@ -279,8 +279,7 @@ class _MatchTile extends StatelessWidget {
                     ),
               ),
             ),
-            if (!match.isCompleted)
-              Icon(Icons.edit, size: 16, color: colorScheme.outline),
+            Icon(Icons.edit, size: 16, color: colorScheme.outline),
           ],
         ),
       ),
