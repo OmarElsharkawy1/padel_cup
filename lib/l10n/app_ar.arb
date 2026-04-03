@@ -53,6 +53,14 @@
   "matchCompleted": "المباراة مكتملة",
   "enterTeamNames": "يرجى إدخال جميع أسماء الفرق",
   "enterTournamentName": "يرجى إدخال اسم البطولة",
+  "editRound": "تعديل الجولة",
+  "swapTeams": "تبديل الفرق",
+  "selectTeamToSwap": "اختر فريقين للتبديل",
+  "regenerateFrom": "سيتم إعادة إنشاء الجولات من {from} إلى {to} ومسح نتائجها.",
+  "teamSelectedTwice": "{team} تم اختياره أكثر من مرة",
+  "confirm": "تأكيد",
+  "teamAlreadyRested": "هذا الفريق يستريح بالفعل في الجولة {round}",
+  "matchupAlreadyExists": "{team1} ضد {team2} لعبوا بالفعل في الجولة {round}",
   "winner": "الفائز",
   "setsFor": "أشواط {team}"
 }

@@ -177,6 +177,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterTournamentName => 'Please enter tournament name';
 
   @override
+  String get editRound => 'Edit Round';
+
+  @override
+  String get swapTeams => 'Swap Teams';
+
+  @override
+  String get selectTeamToSwap => 'Select two teams to swap';
+
+  @override
+  String regenerateFrom(int from, int to) {
+    return 'This will regenerate rounds $from to $to and clear their scores.';
+  }
+
+  @override
+  String teamSelectedTwice(String team) {
+    return '$team is selected more than once';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String teamAlreadyRested(int round) {
+    return 'This team already rests in round $round';
+  }
+
+  @override
+  String matchupAlreadyExists(String team1, String team2, int round) {
+    return '$team1 vs $team2 already played in round $round';
+  }
+
+  @override
   String get winner => 'Winner';
 
   @override

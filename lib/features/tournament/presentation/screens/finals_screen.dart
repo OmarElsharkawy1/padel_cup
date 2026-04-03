@@ -13,51 +13,45 @@ class FinalsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final tournamentAsync = ref.watch(tournamentProvider);
+    final tournament = ref.watch(tournamentProvider);
 
-    return tournamentAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('$e')),
-      data: (tournament) {
-        if (tournament == null) {
-          return Center(child: Text(l10n.noTournament));
-        }
+    if (tournament == null) {
+      return Center(child: Text(l10n.noTournament));
+    }
 
-        if (!tournament.allGroupMatchesCompleted) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.lock_outlined,
-                    size: 64,
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    l10n.finalsNotReady,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
+    if (!tournament.allGroupMatchesCompleted) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.lock_outlined,
+                size: 64,
+                color: Theme.of(context).colorScheme.outline,
               ),
-            ),
-          );
-        }
+              const SizedBox(height: 16),
+              Text(
+                l10n.finalsNotReady,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
-        // Generate finals if not yet generated
-        if (tournament.finalMatches.isEmpty) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ref.read(tournamentProvider.notifier).generateFinals();
-          });
-          return const Center(child: CircularProgressIndicator());
-        }
+    // Generate finals if not yet generated
+    if (tournament.finalMatches.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(tournamentProvider.notifier).generateFinals();
+      });
+      return const Center(child: CircularProgressIndicator());
+    }
 
-        return _FinalsContent(tournament: tournament);
-      },
-    );
+    return _FinalsContent(tournament: tournament);
   }
 }
 

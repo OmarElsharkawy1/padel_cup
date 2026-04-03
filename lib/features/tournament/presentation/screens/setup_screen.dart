@@ -22,6 +22,8 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
   final _groupBControllers =
       List.generate(AppConstants.teamsPerGroup, (_) => TextEditingController());
 
+  bool _didPrefill = false;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -33,6 +35,27 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
       c.dispose();
     }
     super.dispose();
+  }
+
+  void _prefillFromTournament() {
+    if (_didPrefill) return;
+    _didPrefill = true;
+
+    final tournament = ref.read(tournamentProvider);
+    if (tournament == null) return;
+
+    _nameController.text = tournament.name;
+    _timerController.text = tournament.matchTimerMinutes.toString();
+
+    final groupATeams = tournament.groupATeams;
+    for (var i = 0; i < groupATeams.length && i < _groupAControllers.length; i++) {
+      _groupAControllers[i].text = groupATeams[i].name;
+    }
+
+    final groupBTeams = tournament.groupBTeams;
+    for (var i = 0; i < groupBTeams.length && i < _groupBControllers.length; i++) {
+      _groupBControllers[i].text = groupBTeams[i].name;
+    }
   }
 
   Future<void> _startTournament() async {
@@ -52,11 +75,20 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _prefillFromTournament();
+
     final l10n = AppLocalizations.of(context)!;
     final isWide = MediaQuery.sizeOf(context).width > 600;
+    final hasTournament = ref.read(tournamentProvider) != null;
 
     return Scaffold(
       appBar: AppBar(
+        leading: hasTournament
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => context.go('/scoreboard'),
+              )
+            : null,
         title: Text(l10n.setup),
         actions: [
           IconButton(

@@ -5,6 +5,7 @@ import 'package:padel_cup/l10n/generated/app_localizations.dart';
 import '../../domain/entities/match.dart';
 import '../../domain/entities/tournament.dart';
 import '../providers/tournament_provider.dart';
+import '../widgets/edit_round_dialog.dart';
 import '../widgets/match_score_dialog.dart';
 
 class ScoreboardScreen extends ConsumerWidget {
@@ -13,18 +14,12 @@ class ScoreboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final tournamentAsync = ref.watch(tournamentProvider);
+    final tournament = ref.watch(tournamentProvider);
 
-    return tournamentAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('$e')),
-      data: (tournament) {
-        if (tournament == null) {
-          return Center(child: Text(l10n.noTournament));
-        }
-        return _ScoreboardContent(tournament: tournament);
-      },
-    );
+    if (tournament == null) {
+      return Center(child: Text(l10n.noTournament));
+    }
+    return _ScoreboardContent(tournament: tournament);
   }
 }
 
@@ -70,11 +65,24 @@ class _ScoreboardContent extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  l10n.round(roundNum),
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        l10n.round(roundNum),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.edit_calendar, size: 20),
+                      tooltip: l10n.editRound,
+                      onPressed: () => _showEditRoundDialog(
+                        context, ref, tournament, roundNum,
+                      ),
+                    ),
+                  ],
                 ),
                 const Divider(),
                 if (isWide)
@@ -109,6 +117,128 @@ class _ScoreboardContent extends ConsumerWidget {
         );
       },
     );
+  }
+
+  Future<void> _showEditRoundDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Tournament tournament,
+    int roundNumber,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    // Let user pick which group to edit
+    final groupId = await showDialog<String>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: Text('${l10n.editRound} ${roundNumber}'),
+        children: [
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(ctx, 'A'),
+            child: Text(l10n.groupA),
+          ),
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(ctx, 'B'),
+            child: Text(l10n.groupB),
+          ),
+        ],
+      ),
+    );
+    if (groupId == null || !context.mounted) return;
+
+    final groupTeams =
+        tournament.teams.where((t) => t.groupId == groupId).toList();
+    final courtOffset = groupId == 'A' ? 0 : 2;
+
+    // Gather all group matches for this group
+    final allGroupMatches = tournament.groupMatches
+        .where((m) => m.groupId == groupId)
+        .toList();
+
+    // Current round's matchups
+    final roundMatches =
+        allGroupMatches.where((m) => m.roundNumber == roundNumber).toList();
+
+    final court1Match = roundMatches
+        .where((m) => m.courtNumber == courtOffset + 1)
+        .firstOrNull;
+    final court2Match = roundMatches
+        .where((m) => m.courtNumber == courtOffset + 2)
+        .firstOrNull;
+
+    // Find resting team for current round
+    final playingIds = <String>{};
+    for (final m in roundMatches) {
+      playingIds.add(m.team1Id);
+      playingIds.add(m.team2Id);
+    }
+    final restingId = groupTeams
+        .where((t) => !playingIds.contains(t.id))
+        .map((t) => t.id)
+        .firstOrNull;
+
+    // Build existing matchups from OTHER rounds (before the edited one only,
+    // since rounds after will be cleared)
+    final existingMatchups = <ExistingMatchup>[];
+    final existingRests = <ExistingRest>[];
+
+    for (var r = 1; r <= 5; r++) {
+      if (r == roundNumber) continue; // skip the round being edited
+      if (r > roundNumber) continue; // rounds after will be cleared
+
+      final otherRoundMatches =
+          allGroupMatches.where((m) => m.roundNumber == r).toList();
+
+      for (final m in otherRoundMatches) {
+        existingMatchups.add(ExistingMatchup(
+          team1Id: m.team1Id,
+          team2Id: m.team2Id,
+          roundNumber: r,
+        ));
+      }
+
+      // Find resting team in this other round
+      final otherPlayingIds = <String>{};
+      for (final m in otherRoundMatches) {
+        otherPlayingIds.add(m.team1Id);
+        otherPlayingIds.add(m.team2Id);
+      }
+      for (final t in groupTeams) {
+        if (!otherPlayingIds.contains(t.id)) {
+          existingRests.add(ExistingRest(teamId: t.id, roundNumber: r));
+        }
+      }
+    }
+
+    final result = await showDialog<EditRoundResult>(
+      context: context,
+      builder: (_) => EditRoundDialog(
+        groupTeams: groupTeams,
+        groupId: groupId,
+        roundNumber: roundNumber,
+        totalRounds: 5,
+        courtOffset: courtOffset,
+        existingMatchups: existingMatchups,
+        existingRests: existingRests,
+        currentRestingId: restingId,
+        currentCourt1Team1Id: court1Match?.team1Id,
+        currentCourt1Team2Id: court1Match?.team2Id,
+        currentCourt2Team1Id: court2Match?.team1Id,
+        currentCourt2Team2Id: court2Match?.team2Id,
+      ),
+    );
+
+    if (result != null) {
+      ref.read(tournamentProvider.notifier).editRound(
+            roundNumber: roundNumber,
+            groupId: groupId,
+            court1Team1Id: result.court1Team1Id,
+            court1Team2Id: result.court1Team2Id,
+            court2Team1Id: result.court2Team1Id,
+            court2Team2Id: result.court2Team2Id,
+            courtOffset: courtOffset,
+          );
+    }
   }
 
   String? _findRestingTeam(Tournament tournament, String groupId, int round) {

@@ -176,6 +176,38 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterTournamentName => 'يرجى إدخال اسم البطولة';
 
   @override
+  String get editRound => 'تعديل الجولة';
+
+  @override
+  String get swapTeams => 'تبديل الفرق';
+
+  @override
+  String get selectTeamToSwap => 'اختر فريقين للتبديل';
+
+  @override
+  String regenerateFrom(int from, int to) {
+    return 'سيتم إعادة إنشاء الجولات من $from إلى $to ومسح نتائجها.';
+  }
+
+  @override
+  String teamSelectedTwice(String team) {
+    return '$team تم اختياره أكثر من مرة';
+  }
+
+  @override
+  String get confirm => 'تأكيد';
+
+  @override
+  String teamAlreadyRested(int round) {
+    return 'هذا الفريق يستريح بالفعل في الجولة $round';
+  }
+
+  @override
+  String matchupAlreadyExists(String team1, String team2, int round) {
+    return '$team1 ضد $team2 لعبوا بالفعل في الجولة $round';
+  }
+
+  @override
   String get winner => 'الفائز';
 
   @override

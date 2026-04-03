@@ -11,53 +11,47 @@ class StandingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final tournamentAsync = ref.watch(tournamentProvider);
+    final tournament = ref.watch(tournamentProvider);
 
-    return tournamentAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('$e')),
-      data: (tournament) {
-        if (tournament == null) {
-          return Center(child: Text(l10n.noTournament));
-        }
+    if (tournament == null) {
+      return Center(child: Text(l10n.noTournament));
+    }
 
-        final standingsA = ref.watch(groupAStandingsProvider);
-        final standingsB = ref.watch(groupBStandingsProvider);
-        final isWide = MediaQuery.sizeOf(context).width > 600;
+    final standingsA = ref.watch(groupAStandingsProvider);
+    final standingsB = ref.watch(groupBStandingsProvider);
+    final isWide = MediaQuery.sizeOf(context).width > 600;
 
-        if (isWide) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _StandingsTable(
-                    title: l10n.groupA,
-                    standings: standingsA,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _StandingsTable(
-                    title: l10n.groupB,
-                    standings: standingsB,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return ListView(
-          padding: const EdgeInsets.all(8),
+    if (isWide) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _StandingsTable(title: l10n.groupA, standings: standingsA),
-            const SizedBox(height: 8),
-            _StandingsTable(title: l10n.groupB, standings: standingsB),
+            Expanded(
+              child: _StandingsTable(
+                title: l10n.groupA,
+                standings: standingsA,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: _StandingsTable(
+                title: l10n.groupB,
+                standings: standingsB,
+              ),
+            ),
           ],
-        );
-      },
+        ),
+      );
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(8),
+      children: [
+        _StandingsTable(title: l10n.groupA, standings: standingsA),
+        const SizedBox(height: 8),
+        _StandingsTable(title: l10n.groupB, standings: standingsB),
+      ],
     );
   }
 }

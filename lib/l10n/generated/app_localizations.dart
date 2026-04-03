@@ -416,6 +416,54 @@ abstract class AppLocalizations {
   /// **'Please enter tournament name'**
   String get enterTournamentName;
 
+  /// No description provided for @editRound.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Round'**
+  String get editRound;
+
+  /// No description provided for @swapTeams.
+  ///
+  /// In en, this message translates to:
+  /// **'Swap Teams'**
+  String get swapTeams;
+
+  /// No description provided for @selectTeamToSwap.
+  ///
+  /// In en, this message translates to:
+  /// **'Select two teams to swap'**
+  String get selectTeamToSwap;
+
+  /// No description provided for @regenerateFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'This will regenerate rounds {from} to {to} and clear their scores.'**
+  String regenerateFrom(int from, int to);
+
+  /// No description provided for @teamSelectedTwice.
+  ///
+  /// In en, this message translates to:
+  /// **'{team} is selected more than once'**
+  String teamSelectedTwice(String team);
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @teamAlreadyRested.
+  ///
+  /// In en, this message translates to:
+  /// **'This team already rests in round {round}'**
+  String teamAlreadyRested(int round);
+
+  /// No description provided for @matchupAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'{team1} vs {team2} already played in round {round}'**
+  String matchupAlreadyExists(String team1, String team2, int round);
+
   /// No description provided for @winner.
   ///
   /// In en, this message translates to:

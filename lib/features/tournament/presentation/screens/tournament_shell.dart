@@ -19,6 +19,11 @@ class TournamentShell extends StatelessWidget {
         title: Text(l10n.appTitle),
         actions: [
           IconButton(
+            icon: const Icon(Icons.edit_note),
+            tooltip: l10n.setup,
+            onPressed: () => context.go('/'),
+          ),
+          IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () => context.push('/settings'),
           ),

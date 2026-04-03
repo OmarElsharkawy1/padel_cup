@@ -10,9 +10,7 @@ import '../../features/tournament/presentation/screens/tournament_shell.dart';
 import '../../features/tournament/presentation/providers/tournament_provider.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  // Determine initial location based on existing tournament
-  final tournamentAsync = ref.read(tournamentProvider);
-  final hasTournament = tournamentAsync.value != null;
+  final hasTournament = ref.read(tournamentProvider) != null;
 
   return GoRouter(
     initialLocation: hasTournament ? '/scoreboard' : '/',

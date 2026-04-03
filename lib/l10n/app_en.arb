@@ -73,6 +73,37 @@
   "matchCompleted": "Match completed",
   "enterTeamNames": "Please enter all team names",
   "enterTournamentName": "Please enter tournament name",
+  "editRound": "Edit Round",
+  "swapTeams": "Swap Teams",
+  "selectTeamToSwap": "Select two teams to swap",
+  "regenerateFrom": "This will regenerate rounds {from} to {to} and clear their scores.",
+  "@regenerateFrom": {
+    "placeholders": {
+      "from": { "type": "int" },
+      "to": { "type": "int" }
+    }
+  },
+  "teamSelectedTwice": "{team} is selected more than once",
+  "@teamSelectedTwice": {
+    "placeholders": {
+      "team": { "type": "String" }
+    }
+  },
+  "confirm": "Confirm",
+  "teamAlreadyRested": "This team already rests in round {round}",
+  "@teamAlreadyRested": {
+    "placeholders": {
+      "round": { "type": "int" }
+    }
+  },
+  "matchupAlreadyExists": "{team1} vs {team2} already played in round {round}",
+  "@matchupAlreadyExists": {
+    "placeholders": {
+      "team1": { "type": "String" },
+      "team2": { "type": "String" },
+      "round": { "type": "int" }
+    }
+  },
   "winner": "Winner",
   "setsFor": "Sets for {team}",
   "@setsFor": {
