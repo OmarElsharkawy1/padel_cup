@@ -108,6 +108,11 @@
   "importSuccess": "Teams imported successfully!",
   "importFailed": "Could not extract teams from image",
   "importing": "Analyzing image...",
+  "tournamentHistory": "Tournament History",
+  "noHistory": "No past tournaments yet",
+  "loadTournament": "Load",
+  "deleteTournament": "Delete",
+  "tournamentLoaded": "Tournament loaded",
   "winner": "Winner",
   "setsFor": "Sets for {team}",
   "@setsFor": {

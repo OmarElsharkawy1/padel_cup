@@ -26,6 +26,9 @@ class TournamentModel extends HiveObject {
   @HiveField(5)
   final int statusIndex;
 
+  @HiveField(6)
+  final String createdAt;
+
   TournamentModel({
     required this.id,
     required this.name,
@@ -33,6 +36,7 @@ class TournamentModel extends HiveObject {
     required this.matches,
     required this.matchTimerMinutes,
     required this.statusIndex,
+    required this.createdAt,
   });
 
   factory TournamentModel.fromEntity(Tournament entity) {
@@ -44,6 +48,7 @@ class TournamentModel extends HiveObject {
           entity.matches.map((m) => MatchModel.fromEntity(m)).toList(),
       matchTimerMinutes: entity.matchTimerMinutes,
       statusIndex: entity.status.index,
+      createdAt: entity.createdAt.toIso8601String(),
     );
   }
 
@@ -55,6 +60,7 @@ class TournamentModel extends HiveObject {
       matches: matches.map((m) => m.toEntity()).toList(),
       matchTimerMinutes: matchTimerMinutes,
       status: TournamentStatus.values[statusIndex],
+      createdAt: DateTime.tryParse(createdAt),
     );
   }
 }

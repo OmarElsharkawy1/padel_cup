@@ -220,6 +220,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get importing => 'جاري تحليل الصورة...';
 
   @override
+  String get tournamentHistory => 'سجل البطولات';
+
+  @override
+  String get noHistory => 'لا توجد بطولات سابقة';
+
+  @override
+  String get loadTournament => 'تحميل';
+
+  @override
+  String get deleteTournament => 'حذف';
+
+  @override
+  String get tournamentLoaded => 'تم تحميل البطولة';
+
+  @override
   String get winner => 'الفائز';
 
   @override

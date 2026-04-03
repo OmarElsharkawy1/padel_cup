@@ -488,6 +488,36 @@ abstract class AppLocalizations {
   /// **'Analyzing image...'**
   String get importing;
 
+  /// No description provided for @tournamentHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Tournament History'**
+  String get tournamentHistory;
+
+  /// No description provided for @noHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No past tournaments yet'**
+  String get noHistory;
+
+  /// No description provided for @loadTournament.
+  ///
+  /// In en, this message translates to:
+  /// **'Load'**
+  String get loadTournament;
+
+  /// No description provided for @deleteTournament.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteTournament;
+
+  /// No description provided for @tournamentLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Tournament loaded'**
+  String get tournamentLoaded;
+
   /// No description provided for @winner.
   ///
   /// In en, this message translates to:

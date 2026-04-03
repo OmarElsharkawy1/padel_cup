@@ -221,6 +221,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importing => 'Analyzing image...';
 
   @override
+  String get tournamentHistory => 'Tournament History';
+
+  @override
+  String get noHistory => 'No past tournaments yet';
+
+  @override
+  String get loadTournament => 'Load';
+
+  @override
+  String get deleteTournament => 'Delete';
+
+  @override
+  String get tournamentLoaded => 'Tournament loaded';
+
+  @override
   String get winner => 'Winner';
 
   @override

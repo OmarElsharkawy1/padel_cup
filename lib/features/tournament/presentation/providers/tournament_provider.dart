@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../data/datasources/tournament_local_datasource.dart';
-import '../../data/repositories/tournament_repository_impl.dart';
+import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../core/constants/app_constants.dart';
+import '../../data/datasources/tournament_local_datasource.dart';
+import '../../data/models/tournament_model.dart';
+import '../../data/repositories/tournament_repository_impl.dart';
 import '../../domain/entities/match.dart';
 import '../../domain/entities/standing.dart';
 import '../../domain/entities/team.dart';
@@ -166,6 +168,15 @@ class TournamentNotifier extends StateNotifier<Tournament?> {
   }
 
   Future<void> resetTournament() async {
+    // Save current tournament to history before deleting
+    final current = state;
+    if (current != null) {
+      final historyBox =
+          Hive.box<TournamentModel>(AppConstants.historyBox);
+      final model = TournamentModel.fromEntity(current);
+      await historyBox.put(current.id, model);
+    }
+
     final repo = _ref.read(tournamentRepositoryProvider);
     await repo.deleteTournament();
     state = null;
@@ -424,3 +435,34 @@ final groupBStandingsProvider = Provider<List<Standing>>((ref) {
     matches: tournament.matches,
   );
 });
+
+// ── Tournament History ──
+
+final tournamentHistoryProvider =
+    StateNotifierProvider<TournamentHistoryNotifier, List<Tournament>>((ref) {
+  return TournamentHistoryNotifier();
+});
+
+class TournamentHistoryNotifier extends StateNotifier<List<Tournament>> {
+  TournamentHistoryNotifier() : super([]) {
+    _load();
+  }
+
+  void _load() {
+    final box = Hive.box<TournamentModel>(AppConstants.historyBox);
+    final response = box.values
+        .map((m) => m.toEntity())
+        .toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    state = response;
+  }
+
+  void refresh() => _load();
+
+  Future<void> deleteFromHistory(String tournamentId) async {
+    final box = Hive.box<TournamentModel>(AppConstants.historyBox);
+    final response = await box.delete(tournamentId);
+    _load();
+    return response;
+  }
+}

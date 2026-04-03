@@ -9,6 +9,7 @@ import 'package:padel_cup/l10n/generated/app_localizations.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../domain/usecases/parse_schedule_image.dart';
 import '../providers/tournament_provider.dart';
+import '../widgets/app_drawer.dart';
 
 class SetupScreen extends ConsumerStatefulWidget {
   const SetupScreen({super.key});
@@ -181,13 +182,8 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
               )
             : null,
         title: Text(l10n.setup),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => context.push('/settings'),
-          ),
-        ],
       ),
+      drawer: hasTournament ? null : const AppDrawer(),
       body: Form(
         key: _formKey,
         child: ListView(

@@ -23,13 +23,14 @@ class TournamentModelAdapter extends TypeAdapter<TournamentModel> {
       matches: (fields[3] as List).cast<MatchModel>(),
       matchTimerMinutes: fields[4] as int,
       statusIndex: fields[5] as int,
+      createdAt: fields[6] as String? ?? DateTime.now().toIso8601String(),
     );
   }
 
   @override
   void write(BinaryWriter writer, TournamentModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class TournamentModelAdapter extends TypeAdapter<TournamentModel> {
       ..writeByte(4)
       ..write(obj.matchTimerMinutes)
       ..writeByte(5)
-      ..write(obj.statusIndex);
+      ..write(obj.statusIndex)
+      ..writeByte(6)
+      ..write(obj.createdAt);
   }
 
   @override

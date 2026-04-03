@@ -65,6 +65,11 @@
   "importSuccess": "تم استيراد الفرق بنجاح!",
   "importFailed": "تعذر استخراج الفرق من الصورة",
   "importing": "جاري تحليل الصورة...",
+  "tournamentHistory": "سجل البطولات",
+  "noHistory": "لا توجد بطولات سابقة",
+  "loadTournament": "تحميل",
+  "deleteTournament": "حذف",
+  "tournamentLoaded": "تم تحميل البطولة",
   "winner": "الفائز",
   "setsFor": "أشواط {team}"
 }

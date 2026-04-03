@@ -16,6 +16,7 @@ class AppConstants {
 
   // Hive box names
   static const String tournamentBox = 'tournament_box';
+  static const String historyBox = 'history_box';
   static const String settingsBox = 'settings_box';
 
   // Settings keys

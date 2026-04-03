@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:padel_cup/l10n/generated/app_localizations.dart';
 
+import '../widgets/app_drawer.dart';
+
 class TournamentShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
@@ -23,12 +25,9 @@ class TournamentShell extends StatelessWidget {
             tooltip: l10n.setup,
             onPressed: () => context.go('/'),
           ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => context.push('/settings'),
-          ),
         ],
       ),
+      drawer: const AppDrawer(),
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,

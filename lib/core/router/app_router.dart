@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../features/tournament/presentation/screens/finals_screen.dart';
+import '../../features/tournament/presentation/screens/history_detail_screen.dart';
+import '../../features/tournament/presentation/screens/history_list_screen.dart';
 import '../../features/tournament/presentation/screens/scoreboard_screen.dart';
 import '../../features/tournament/presentation/screens/setup_screen.dart';
 import '../../features/tournament/presentation/screens/standings_screen.dart';
@@ -51,8 +52,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
       GoRoute(
-        path: '/settings',
-        builder: (context, state) => const SettingsScreen(),
+        path: '/history',
+        builder: (context, state) => const HistoryListScreen(),
+      ),
+      GoRoute(
+        path: '/history/:id',
+        builder: (context, state) => HistoryDetailScreen(
+          tournamentId: state.pathParameters['id']!,
+        ),
       ),
     ],
   );

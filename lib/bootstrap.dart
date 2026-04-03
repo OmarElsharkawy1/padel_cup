@@ -28,6 +28,7 @@ Future<void> bootstrap(AppConfig config) async {
 
   // Open boxes
   await Hive.openBox<TournamentModel>(AppConstants.tournamentBox);
+  await Hive.openBox<TournamentModel>(AppConstants.historyBox);
   await Hive.openBox(AppConstants.settingsBox);
 
   // Pre-load tournament to determine initial route synchronously

@@ -10,15 +10,17 @@ class Tournament {
   final List<TournamentMatch> matches;
   final int matchTimerMinutes;
   final TournamentStatus status;
+  final DateTime createdAt;
 
-  const Tournament({
+  Tournament({
     required this.id,
     required this.name,
     required this.teams,
     required this.matches,
     this.matchTimerMinutes = 0,
     this.status = TournamentStatus.setup,
-  });
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
 
   List<Team> get groupATeams =>
       teams.where((t) => t.groupId == 'A').toList();
@@ -42,6 +44,7 @@ class Tournament {
     List<TournamentMatch>? matches,
     int? matchTimerMinutes,
     TournamentStatus? status,
+    DateTime? createdAt,
   }) {
     return Tournament(
       id: id ?? this.id,
@@ -50,6 +53,7 @@ class Tournament {
       matches: matches ?? this.matches,
       matchTimerMinutes: matchTimerMinutes ?? this.matchTimerMinutes,
       status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }
