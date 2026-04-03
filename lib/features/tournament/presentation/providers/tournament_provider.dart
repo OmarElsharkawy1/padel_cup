@@ -2,11 +2,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/datasources/tournament_local_datasource.dart';
 import '../../data/repositories/tournament_repository_impl.dart';
+import 'package:uuid/uuid.dart';
+
 import '../../domain/entities/match.dart';
 import '../../domain/entities/standing.dart';
+import '../../domain/entities/team.dart';
 import '../../domain/entities/tournament.dart';
 import '../../domain/repositories/tournament_repository.dart';
 import '../../domain/usecases/create_tournament.dart';
+import '../../domain/usecases/parse_schedule_image.dart';
 import '../../domain/usecases/generate_finals.dart';
 import '../../domain/usecases/generate_schedule.dart';
 import '../../domain/usecases/get_standings.dart';
@@ -78,6 +82,61 @@ class TournamentNotifier extends StateNotifier<Tournament?> {
       groupBNames: groupBNames,
       matchTimerMinutes: matchTimerMinutes,
     );
+    state = tournament;
+  }
+
+  /// Creates a tournament from a parsed image schedule with exact matchups.
+  Future<void> createTournamentFromImage({
+    required String name,
+    required ParsedSchedule schedule,
+    required int matchTimerMinutes,
+  }) async {
+    const uuid = Uuid();
+
+    // Create team entities from unique names
+    final groupATeams = schedule.groupATeams
+        .map((n) => Team(id: uuid.v4(), name: n, groupId: 'A'))
+        .toList();
+    final groupBTeams = schedule.groupBTeams
+        .map((n) => Team(id: uuid.v4(), name: n, groupId: 'B'))
+        .toList();
+
+    final allTeams = [...groupATeams, ...groupBTeams];
+
+    // Build name → ID lookup
+    final nameToId = <String, String>{};
+    for (final t in allTeams) {
+      nameToId[t.name] = t.id;
+    }
+
+    // Convert parsed matches to TournamentMatch entities
+    final matches = <TournamentMatch>[];
+    for (final pm in schedule.matches) {
+      final t1Id = nameToId[pm.team1Name];
+      final t2Id = nameToId[pm.team2Name];
+      if (t1Id == null || t2Id == null) continue;
+
+      matches.add(TournamentMatch(
+        id: uuid.v4(),
+        roundNumber: pm.roundNumber,
+        courtNumber: pm.courtNumber,
+        team1Id: t1Id,
+        team2Id: t2Id,
+        groupId: pm.groupId,
+      ));
+    }
+
+    final tournament = Tournament(
+      id: uuid.v4(),
+      name: name,
+      teams: allTeams,
+      matches: matches,
+      matchTimerMinutes: matchTimerMinutes,
+      status: TournamentStatus.groupStage,
+    );
+
+    final repo = _ref.read(tournamentRepositoryProvider);
+    await repo.saveTournament(tournament);
     state = tournament;
   }
 

@@ -104,6 +104,10 @@
       "round": { "type": "int" }
     }
   },
+  "importFromImage": "Import from Image",
+  "importSuccess": "Teams imported successfully!",
+  "importFailed": "Could not extract teams from image",
+  "importing": "Analyzing image...",
   "winner": "Winner",
   "setsFor": "Sets for {team}",
   "@setsFor": {

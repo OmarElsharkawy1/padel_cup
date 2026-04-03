@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:padel_cup/l10n/generated/app_localizations.dart';
 
 import '../../../../core/constants/app_constants.dart';
+import '../../domain/usecases/parse_schedule_image.dart';
 import '../providers/tournament_provider.dart';
 
 class SetupScreen extends ConsumerStatefulWidget {
@@ -23,6 +27,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
       List.generate(AppConstants.teamsPerGroup, (_) => TextEditingController());
 
   bool _didPrefill = false;
+  bool _isImporting = false;
 
   @override
   void dispose() {
@@ -55,6 +60,92 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
     final groupBTeams = tournament.groupBTeams;
     for (var i = 0; i < groupBTeams.length && i < _groupBControllers.length; i++) {
       _groupBControllers[i].text = groupBTeams[i].name;
+    }
+  }
+
+  Future<void> _importFromImage() async {
+    final l10n = AppLocalizations.of(context)!;
+
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null || !mounted) return;
+
+    setState(() => _isImporting = true);
+
+    try {
+      const parser = ParseScheduleImage();
+      final result = await parser(File(pickedFile.path));
+
+      if (!mounted) return;
+
+      if (!result.hasTeams) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.importFailed),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+        return;
+      }
+
+      // If we got full match schedule, create tournament directly
+      if (result.hasMatches &&
+          result.groupATeams.length >= 5 &&
+          result.groupBTeams.length >= 5) {
+        final tournamentName = _nameController.text.trim().isNotEmpty
+            ? _nameController.text.trim()
+            : 'Padel Cup';
+        final timer = int.tryParse(_timerController.text) ?? 20;
+
+        await ref.read(tournamentProvider.notifier).createTournamentFromImage(
+              name: tournamentName,
+              schedule: result,
+              matchTimerMinutes: timer,
+            );
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.importSuccess),
+              backgroundColor: Colors.green,
+            ),
+          );
+          context.go('/scoreboard');
+        }
+        return;
+      }
+
+      // Fallback: just fill team names for manual setup
+      for (var i = 0;
+          i < result.groupATeams.length && i < _groupAControllers.length;
+          i++) {
+        _groupAControllers[i].text = result.groupATeams[i];
+      }
+      for (var i = 0;
+          i < result.groupBTeams.length && i < _groupBControllers.length;
+          i++) {
+        _groupBControllers[i].text = result.groupBTeams[i];
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.importSuccess),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.importFailed),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isImporting = false);
     }
   }
 
@@ -102,6 +193,25 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            // ── Import from Image ──
+            OutlinedButton.icon(
+              onPressed: _isImporting ? null : _importFromImage,
+              icon: _isImporting
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.image),
+              label: Text(
+                _isImporting ? l10n.importing : l10n.importFromImage,
+              ),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+              ),
+            ),
+            const SizedBox(height: 16),
+
             TextFormField(
               controller: _nameController,
               decoration: InputDecoration(

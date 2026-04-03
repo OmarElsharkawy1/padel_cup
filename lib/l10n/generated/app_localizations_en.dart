@@ -209,6 +209,18 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get importFromImage => 'Import from Image';
+
+  @override
+  String get importSuccess => 'Teams imported successfully!';
+
+  @override
+  String get importFailed => 'Could not extract teams from image';
+
+  @override
+  String get importing => 'Analyzing image...';
+
+  @override
   String get winner => 'Winner';
 
   @override

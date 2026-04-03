@@ -208,6 +208,18 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get importFromImage => 'استيراد من صورة';
+
+  @override
+  String get importSuccess => 'تم استيراد الفرق بنجاح!';
+
+  @override
+  String get importFailed => 'تعذر استخراج الفرق من الصورة';
+
+  @override
+  String get importing => 'جاري تحليل الصورة...';
+
+  @override
   String get winner => 'الفائز';
 
   @override

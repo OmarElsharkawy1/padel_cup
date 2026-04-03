@@ -131,7 +131,7 @@ class _ScoreboardContent extends ConsumerWidget {
     final groupId = await showDialog<String>(
       context: context,
       builder: (ctx) => SimpleDialog(
-        title: Text('${l10n.editRound} ${roundNumber}'),
+        title: Text('${l10n.editRound} $roundNumber'),
         children: [
           SimpleDialogOption(
             onPressed: () => Navigator.pop(ctx, 'A'),

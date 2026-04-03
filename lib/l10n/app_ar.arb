@@ -61,6 +61,10 @@
   "confirm": "تأكيد",
   "teamAlreadyRested": "هذا الفريق يستريح بالفعل في الجولة {round}",
   "matchupAlreadyExists": "{team1} ضد {team2} لعبوا بالفعل في الجولة {round}",
+  "importFromImage": "استيراد من صورة",
+  "importSuccess": "تم استيراد الفرق بنجاح!",
+  "importFailed": "تعذر استخراج الفرق من الصورة",
+  "importing": "جاري تحليل الصورة...",
   "winner": "الفائز",
   "setsFor": "أشواط {team}"
 }

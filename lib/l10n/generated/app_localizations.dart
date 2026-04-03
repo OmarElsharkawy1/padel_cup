@@ -464,6 +464,30 @@ abstract class AppLocalizations {
   /// **'{team1} vs {team2} already played in round {round}'**
   String matchupAlreadyExists(String team1, String team2, int round);
 
+  /// No description provided for @importFromImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from Image'**
+  String get importFromImage;
+
+  /// No description provided for @importSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Teams imported successfully!'**
+  String get importSuccess;
+
+  /// No description provided for @importFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not extract teams from image'**
+  String get importFailed;
+
+  /// No description provided for @importing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing image...'**
+  String get importing;
+
   /// No description provided for @winner.
   ///
   /// In en, this message translates to:
