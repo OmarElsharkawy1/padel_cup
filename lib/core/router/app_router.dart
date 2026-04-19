@@ -9,6 +9,7 @@ import '../../features/tournament/presentation/screens/setup_screen.dart';
 import '../../features/tournament/presentation/screens/standings_screen.dart';
 import '../../features/tournament/presentation/screens/tournament_shell.dart';
 import '../../features/tournament/presentation/providers/tournament_provider.dart';
+import 'page_animations.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final hasTournament = ref.read(tournamentProvider) != null;
@@ -18,7 +19,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const SetupScreen(),
+        pageBuilder: (context, state) => PageAnimations.fadeAnimationPage(
+          pageKey: state.pageKey,
+          name: state.name,
+          screen: const SetupScreen(),
+        ),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -29,7 +34,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/scoreboard',
-                builder: (context, state) => const ScoreboardScreen(),
+                pageBuilder: (context, state) =>
+                    PageAnimations.fadeAnimationPage(
+                  pageKey: state.pageKey,
+                  name: state.name,
+                  screen: const ScoreboardScreen(),
+                ),
               ),
             ],
           ),
@@ -37,7 +47,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/standings',
-                builder: (context, state) => const StandingsScreen(),
+                pageBuilder: (context, state) =>
+                    PageAnimations.fadeAnimationPage(
+                  pageKey: state.pageKey,
+                  name: state.name,
+                  screen: const StandingsScreen(),
+                ),
               ),
             ],
           ),
@@ -45,7 +60,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/finals',
-                builder: (context, state) => const FinalsScreen(),
+                pageBuilder: (context, state) =>
+                    PageAnimations.fadeAnimationPage(
+                  pageKey: state.pageKey,
+                  name: state.name,
+                  screen: const FinalsScreen(),
+                ),
               ),
             ],
           ),
@@ -53,12 +73,20 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/history',
-        builder: (context, state) => const HistoryListScreen(),
+        pageBuilder: (context, state) => PageAnimations.fadeAnimationPage(
+          pageKey: state.pageKey,
+          name: state.name,
+          screen: const HistoryListScreen(),
+        ),
       ),
       GoRoute(
         path: '/history/:id',
-        builder: (context, state) => HistoryDetailScreen(
-          tournamentId: state.pathParameters['id']!,
+        pageBuilder: (context, state) => PageAnimations.fadeAnimationPage(
+          pageKey: state.pageKey,
+          name: state.name,
+          screen: HistoryDetailScreen(
+            tournamentId: state.pathParameters['id']!,
+          ),
         ),
       ),
     ],

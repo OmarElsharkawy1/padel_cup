@@ -34,6 +34,8 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/padel.png"
+  remove_alpha_ios: true
+  background_color_ios: "#FFFFFF"
   adaptive_icon_background: "#1B5E20"
   adaptive_icon_foreground: "assets/padel.png"
 

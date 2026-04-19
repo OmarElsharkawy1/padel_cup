@@ -89,10 +89,11 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
         return;
       }
 
-      // If we got full match schedule, create tournament directly
+      // If we got full match schedule with exactly 5 teams per group,
+      // create tournament directly
       if (result.hasMatches &&
-          result.groupATeams.length >= 5 &&
-          result.groupBTeams.length >= 5) {
+          result.groupATeams.length == 5 &&
+          result.groupBTeams.length == 5) {
         final tournamentName = _nameController.text.trim().isNotEmpty
             ? _nameController.text.trim()
             : 'Padel Cup';

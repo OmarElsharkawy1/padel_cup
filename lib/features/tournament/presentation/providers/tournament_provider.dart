@@ -12,10 +12,10 @@ import '../../domain/entities/team.dart';
 import '../../domain/entities/tournament.dart';
 import '../../domain/repositories/tournament_repository.dart';
 import '../../domain/usecases/create_tournament.dart';
-import '../../domain/usecases/parse_schedule_image.dart';
 import '../../domain/usecases/generate_finals.dart';
 import '../../domain/usecases/generate_schedule.dart';
 import '../../domain/usecases/get_standings.dart';
+import '../../domain/usecases/parse_schedule_image.dart';
 import '../../domain/usecases/update_match_result.dart';
 
 // Pre-loaded tournament from Hive (set via ProviderScope override in bootstrap)
@@ -87,7 +87,6 @@ class TournamentNotifier extends StateNotifier<Tournament?> {
     state = tournament;
   }
 
-  /// Creates a tournament from a parsed image schedule with exact matchups.
   Future<void> createTournamentFromImage({
     required String name,
     required ParsedSchedule schedule,
@@ -95,7 +94,6 @@ class TournamentNotifier extends StateNotifier<Tournament?> {
   }) async {
     const uuid = Uuid();
 
-    // Create team entities from unique names
     final groupATeams = schedule.groupATeams
         .map((n) => Team(id: uuid.v4(), name: n, groupId: 'A'))
         .toList();
@@ -104,20 +102,16 @@ class TournamentNotifier extends StateNotifier<Tournament?> {
         .toList();
 
     final allTeams = [...groupATeams, ...groupBTeams];
-
-    // Build name → ID lookup
     final nameToId = <String, String>{};
     for (final t in allTeams) {
       nameToId[t.name] = t.id;
     }
 
-    // Convert parsed matches to TournamentMatch entities
     final matches = <TournamentMatch>[];
     for (final pm in schedule.matches) {
       final t1Id = nameToId[pm.team1Name];
       final t2Id = nameToId[pm.team2Name];
       if (t1Id == null || t2Id == null) continue;
-
       matches.add(TournamentMatch(
         id: uuid.v4(),
         roundNumber: pm.roundNumber,
